@@ -52,7 +52,12 @@ func _draw(): #Vamos a dibujar los ejes cartesianos
 	
 	#Una vez cargado toda la Intefaz del nivel, cargamos tangrama
 	cargar_tangrama()
+	cargar_pieza()
 	
 func cargar_tangrama():
 	var newTangram = get_tree().get_nodes_in_group("main")[0].tangram.instance()
 	add_child(newTangram)
+	
+func cargar_pieza():
+	var newTangram = get_tree().get_nodes_in_group("main")[0].gato.instance()
+	get_tree().get_nodes_in_group("tangram")[0].add_child(newTangram)

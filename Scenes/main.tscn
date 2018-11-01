@@ -1,9 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/txt_num.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Tangrama.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/nivel.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Gato.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Barco.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Casita.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Cisne.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Arbol.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scenes/nivel.gd" type="Script" id=9]
 
 [node name="main" type="Node" index="0" groups=[
 "main",
@@ -12,6 +17,11 @@
 script = ExtResource( 1 )
 txt_cartes = ExtResource( 2 )
 tangram = ExtResource( 3 )
+gato = ExtResource( 4 )
+barco = ExtResource( 5 )
+casita = ExtResource( 6 )
+cisne = ExtResource( 7 )
+arbol = ExtResource( 8 )
 
 [node name="cam" type="Camera2D" parent="." index="0"]
 
@@ -42,7 +52,7 @@ editor_draw_drag_margin = false
 "nivel",
 ]]
 
-script = ExtResource( 4 )
+script = ExtResource( 9 )
 unidad_x = 20
 unidad_y = 20
 grosor_lineas = 1

@@ -1,8 +1,10 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scenes/Tangrama.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Tangrama2.gd" type="Script" id=1]
 
-[node name="Tangrama" type="Node2D"]
+[node name="Tangrama" type="Node2D" groups=[
+"tangram",
+]]
 
 script = ExtResource( 1 )
 
