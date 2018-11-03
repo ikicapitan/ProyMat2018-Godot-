@@ -8,6 +8,7 @@ var LADO_TRI_M = sqrt(BASE * BASE + BASE * BASE) # CALCULANDO HIPOTENUSA
 var LADO_TRI_C = BASE
 var LADO_PARAL = BASE
 var LADO_CUADR = LADO_TRI_M / 2 # MITAD DE LADO_TRI_M
+var target = 0 #Pieza seleccionada actualmente
 
 #Por Iki
 var offset
@@ -39,6 +40,7 @@ func dibujar_tangrama():
 	tri2()
 	quad1()
 	rect1()
+	update()
 	
 func actualizar():
 	update()
@@ -56,6 +58,17 @@ func quad(var dim, var color): #Dibuja cuadrado
 		piezas[5].vertices.append(Vector2(dim * offset.x * modificador,dim * -offset.x).rotated(radianes)+ piezas[5].pos_ini)
 		piezas[5].vertices.append(Vector2(0,dim * -offset.x).rotated(radianes)+ piezas[5].pos_ini)
 		draw_polygon(piezas[5].vertices, PoolColorArray([color]))
+		if(target == 5): #Si el target es identico a 5, es porque es esta pieza
+			for v in piezas[5].vertices: #Creamos vertices seleccionables
+				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
+				add_child(newPoint)
+				newPoint.rect_position = v + v_offset
+		#Crear punto seleccion figura
+		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
+		add_child(newPoint)
+		newPoint.modulate = Color(1, 0.41, 0.71, 1)
+		newPoint.rect_position = piezas[5].vertices[0] + Vector2(LADO_CUADR/2*offset.x,-LADO_CUADR/2*offset.x)
+		newPoint.pieza_referencia = 5
 	
 func rect(var dim, var color): #Dibuja rectangulo
 	if(piezas[6].disponible):
@@ -71,6 +84,18 @@ func rect(var dim, var color): #Dibuja rectangulo
 		piezas[6].vertices.append(Vector2(dim/2 * offset.x * modificador + dim * offset.x * modificador,dim/2 * -offset.x).rotated(radianes)+ piezas[6].pos_ini)
 		piezas[6].vertices.append(Vector2(dim/2 * offset.x * modificador,dim/2 * -offset.x).rotated(radianes)+ piezas[6].pos_ini)
 		draw_polygon(piezas[6].vertices, PoolColorArray([color]))
+		if(target == 6):
+			for v in piezas[6].vertices: 
+				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
+				add_child(newPoint)
+				newPoint.rect_position = v + v_offset
+		#Crear punto seleccion figura
+		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
+		add_child(newPoint)
+		newPoint.modulate = Color(1, 0.41, 0.71, 1)
+		newPoint.rect_position = piezas[6].vertices[0] + Vector2(LADO_PARAL/2*offset.x,-LADO_PARAL/2*offset.x)
+		newPoint.pieza_referencia = 6
+	
 	
 func tri(var dim, var color, var index): #Dibuja triangulos dinamicos
 	if(piezas[index].disponible):
@@ -85,14 +110,18 @@ func tri(var dim, var color, var index): #Dibuja triangulos dinamicos
 		piezas[index].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes) + piezas[index].pos_ini)
 		piezas[index].vertices.append(Vector2(dim/2 * offset.x * modificador, dim/2 * -offset.x).rotated(radianes)+ piezas[index].pos_ini)
 		draw_polygon(piezas[index].vertices, PoolColorArray([color]))	
+		if(target == index):
+			for v in piezas[index].vertices: 
+				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
+				add_child(newPoint)
+				newPoint.rect_position = v + v_offset
 	
-	if(index == 2): #Si es el triangulo mediano le genero vertices seleccionables
-		for v in piezas[index].vertices: 
-			var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
-			add_child(newPoint)
-			newPoint.rect_position = v + v_offset
-			
-		
+		#Crear punto seleccion figura
+		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
+		add_child(newPoint)
+		newPoint.modulate = Color(1, 0.41, 0.71, 1)
+		newPoint.rect_position = Vector2(dim/2 * offset.x * modificador,dim/4 * -offset.x).rotated(radianes) + piezas[index].pos_ini
+		newPoint.pieza_referencia = index
 
 #Sub Funciones
 
