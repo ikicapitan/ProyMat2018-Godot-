@@ -5,16 +5,17 @@ func _ready():
 	for p in t.piezas: #Recorro todas las piezas
 		p.disponible = true #Las habilito para dibujado
 	
-	#Propiedades especificas del gato
-	t.piezas[1].pos_ini = Vector2(0.0,-3.0)
+	#Propiedades especificas de la casa
+	t.piezas[1].pos_ini = Vector2(t.LADO_CUADR /2, -t.LADO_TRI_C)
 	t.piezas[2].grados = 315.0
 	t.piezas[2].pos_ini = Vector2(0.0,0.0)
 	t.piezas[3].grados = 180.0
-	t.piezas[3].pos_ini = Vector2(6.0, -3.0)
+	t.piezas[3].pos_ini = Vector2(t.LADO_TRI_G, -t.LADO_TRI_C)
 	t.piezas[4].grados = 270.0
-	t.piezas[4].pos_ini = Vector2(6.0, 0.0)
-	t.piezas[5].pos_ini = Vector2(0.0,-5.0)
-	t.piezas[6].grados =  45.0
-	t.piezas[6].pos_ini = Vector2(-4.0, -5.0)
+	t.piezas[4].pos_ini = Vector2(t.LADO_TRI_G, 0)
+	t.piezas[5].pos_ini = Vector2(t.LADO_CUADR /2,-t.LADO_TRI_C -t.LADO_CUADR)
+	t.piezas[6].grados =  135.0
+	t.piezas[6].flipped = true
+	t.piezas[6].pos_ini = Vector2(-t.LADO_CUADR /2, -t.LADO_TRI_C)
 	
 	t.actualizar()
