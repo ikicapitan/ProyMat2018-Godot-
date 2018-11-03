@@ -7,6 +7,7 @@ export (PackedScene) var barco
 export (PackedScene) var casita
 export (PackedScene) var cisne
 export (PackedScene) var arbol
+export (PackedScene) var select
 
 func _ready():
 	pass

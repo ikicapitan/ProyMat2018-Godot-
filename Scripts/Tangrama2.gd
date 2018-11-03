@@ -11,7 +11,7 @@ var LADO_CUADR = LADO_TRI_M / 2 # MITAD DE LADO_TRI_M
 
 #Por Iki
 var offset
-
+export (Vector2) var v_offset
 var piezas = [pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new()] #1 y 2 (TRI3), 3 (TRI2), 4 y 5 (TRI1), 6 QUAD, 7 RECT
 var modificador = 1
 
@@ -85,6 +85,14 @@ func tri(var dim, var color, var index): #Dibuja triangulos dinamicos
 		piezas[index].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes) + piezas[index].pos_ini)
 		piezas[index].vertices.append(Vector2(dim/2 * offset.x * modificador, dim/2 * -offset.x).rotated(radianes)+ piezas[index].pos_ini)
 		draw_polygon(piezas[index].vertices, PoolColorArray([color]))	
+	
+	if(index == 2): #Si es el triangulo mediano le genero vertices seleccionables
+		for v in piezas[index].vertices: 
+			var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
+			add_child(newPoint)
+			newPoint.rect_position = v + v_offset
+			
+		
 
 #Sub Funciones
 

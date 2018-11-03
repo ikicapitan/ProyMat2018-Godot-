@@ -59,5 +59,5 @@ func cargar_tangrama():
 	add_child(newTangram)
 	
 func cargar_pieza():
-	var newTangram = get_tree().get_nodes_in_group("main")[0].gato.instance()
+	var newTangram = get_tree().get_nodes_in_group("main")[0].arbol.instance()
 	get_tree().get_nodes_in_group("tangram")[0].add_child(newTangram)
