@@ -27,6 +27,13 @@ class pieza: #Clase pieza de Tangrama
 
 func dibujar_figura(pieza, color):#Dibuja la pieza segun sus vertices
 	draw_polygon(pieza.vertices, PoolColorArray([color]))
+	
+func calcular_centro(pieza):#Calcula un punto medio en la figura
+	var centro = Vector2()
+	for v in pieza.vertices:
+		centro += v
+	centro = centro / pieza.vertices.size() + v_offset
+	return centro
 
 func _ready():
 	offset = get_tree().get_nodes_in_group("nivel")[0].dim_offset
@@ -80,25 +87,8 @@ func quad(var dim): #Crea cuadrado
 		piezas[5].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes)+ pos_ini)
 		piezas[5].vertices.append(Vector2(dim * offset.x * modificador,dim * -offset.x).rotated(radianes)+ pos_ini)
 		piezas[5].vertices.append(Vector2(0,dim * -offset.x).rotated(radianes)+ pos_ini)
-#
-#		if(target == 5): #Si el target es identico a 5, es porque es esta pieza
-#			for v in piezas[5].vertices: #Creamos vertices seleccionables
-#				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
-#				add_child(newPoint)
-#				newPoint.rect_position = v + v_offset
-		#Crear punto seleccion figura
-#		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
-#		add_child(newPoint)
-#		piezas[5].boton_select.modulate = Color(1, 0.41, 0.71, 1)
-		var max_point = piezas[5].vertices[0]
-		var min_point = piezas[5].vertices[0]
-		for i in piezas[5].vertices.size() -1:
-			max_point.x = max(max_point.x,piezas[5].vertices[i+1].x)
-			max_point.y = min(max_point.y,piezas[5].vertices[i+1].y)
-			min_point.x = min(min_point.x,piezas[5].vertices[i+1].x)
-			min_point.y = max(min_point.y,piezas[5].vertices[i+1].y)
 		
-		piezas[5].boton_select.rect_position = (max_point + min_point ) /2 + v_offset
+		piezas[5].boton_select.rect_position = calcular_centro(piezas[5])
 		piezas[5].boton_select.pieza_referencia = 5
 	
 func rect(var dim): #Crea rectangulo
@@ -115,25 +105,8 @@ func rect(var dim): #Crea rectangulo
 		piezas[6].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes) + pos_ini)
 		piezas[6].vertices.append(Vector2(dim/2 * offset.x * modificador + dim * offset.x * modificador,dim/2 * -offset.x).rotated(radianes) + pos_ini)
 		piezas[6].vertices.append(Vector2(dim/2 * offset.x * modificador,dim/2 * -offset.x).rotated(radianes) + pos_ini)
-#		draw_polygon(piezas[6].vertices, PoolColorArray([color]))
-#		if(target == 6):
-#			for v in piezas[6].vertices: 
-#				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
-#				add_child(newPoint)
-#				newPoint.rect_position = v + v_offset
-		#Crear punto seleccion figura
-#		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
-#		add_child(newPoint)
-#		piezas[6].boton_select.modulate = Color(1, 0.41, 0.71, 1)
-		var max_point = piezas[6].vertices[0]
-		var min_point = piezas[6].vertices[0]
-		for i in piezas[5].vertices.size() -1:
-			max_point.x = max(max_point.x,piezas[6].vertices[i+1].x)
-			max_point.y = min(max_point.y,piezas[6].vertices[i+1].y)
-			min_point.x = min(min_point.x,piezas[6].vertices[i+1].x)
-			min_point.y = max(min_point.y,piezas[6].vertices[i+1].y)
 		
-		piezas[6].boton_select.rect_position = (max_point + min_point ) /2 + v_offset
+		piezas[6].boton_select.rect_position = calcular_centro(piezas[6])
 		piezas[6].boton_select.pieza_referencia = 6
 	
 	
@@ -150,18 +123,7 @@ func tri(var dim, var index): #Crea triangulos dinamicos
 		piezas[index].vertices.append(Vector2(0,0).rotated(radianes) + pos_ini)
 		piezas[index].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes) + pos_ini)
 		piezas[index].vertices.append(Vector2(dim/2 * offset.x * modificador, dim/2 * -offset.x).rotated(radianes) + pos_ini)
-#		draw_polygon(piezas[index].vertices, PoolColorArray([color]))	
-#		if(target == index):
-#			for v in piezas[index].vertices: 
-#				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
-#				add_child(newPoint)
-#				newPoint.rect_position = v + v_offset
-#
-		#Crear punto seleccion figura
-#		var newPoint = get_tree().get_nodes_in_group("main")[0].select_p.instance()
-#		add_child(newPoint)
-#		piezas[index].boton_select.modulate = Color(1, 0.41, 0.71, 1)
-		piezas[index].boton_select.rect_position = ((piezas[index].vertices[0] + piezas[index].vertices[1] + piezas[index].vertices[2])) /3 + v_offset
+		piezas[index].boton_select.rect_position = calcular_centro(piezas[index])
 		piezas[index].boton_select.pieza_referencia = index
 
 #Sub Funciones
@@ -186,6 +148,4 @@ func quad1(): #Dibuja el cuadrado
 
 func rect1(): #Dibuja el rectangulo
 	rect(LADO_PARAL)
-	
-
 	
