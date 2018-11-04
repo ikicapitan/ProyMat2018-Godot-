@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/txt_num.tscn" type="PackedScene" id=2]
@@ -9,7 +9,8 @@
 [ext_resource path="res://Scenes/Cisne.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Arbol.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scenes/slct.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/nivel.gd" type="Script" id=10]
+[ext_resource path="res://Scenes/slct_pieza.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/nivel.gd" type="Script" id=11]
 
 [node name="main" type="Node" groups=[
 "main",
@@ -24,6 +25,7 @@ casita = ExtResource( 6 )
 cisne = ExtResource( 7 )
 arbol = ExtResource( 8 )
 select = ExtResource( 9 )
+select_p = ExtResource( 10 )
 
 [node name="cam" type="Camera2D" parent="." index="0"]
 
@@ -54,7 +56,7 @@ editor_draw_drag_margin = false
 "nivel",
 ]]
 
-script = ExtResource( 10 )
+script = ExtResource( 11 )
 unidad_x = 20
 unidad_y = 20
 grosor_lineas = 1

@@ -8,6 +8,7 @@ export (PackedScene) var casita
 export (PackedScene) var cisne
 export (PackedScene) var arbol
 export (PackedScene) var select
+export (PackedScene) var select_p
 
 func _ready():
 	pass
