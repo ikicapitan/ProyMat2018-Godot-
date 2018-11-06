@@ -7,6 +7,6 @@
 ]]
 
 script = ExtResource( 1 )
-v_offset = Vector2( -5, -5 )
+v_offset = Vector2( -7, -7 )
 
 
