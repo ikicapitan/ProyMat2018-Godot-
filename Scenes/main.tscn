@@ -12,7 +12,7 @@
 [ext_resource path="res://Scenes/slct_pieza.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/nivel.gd" type="Script" id=11]
 
-[node name="main" type="Node" groups=[
+[node name="main" type="Node" index="0" groups=[
 "main",
 ]]
 
