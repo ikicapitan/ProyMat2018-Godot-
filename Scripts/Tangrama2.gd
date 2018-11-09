@@ -40,7 +40,6 @@ func dibujar_tangrama():
 	tri2()
 	quad1()
 	rect1()
-	update()
 	
 func actualizar():
 	update()
