@@ -9,7 +9,8 @@ export (PackedScene) var cisne
 export (PackedScene) var arbol
 export (PackedScene) var select
 export (PackedScene) var select_p
+export (int) var cant_figuras
 
 func _ready():
-	pass
+	randomize()
 

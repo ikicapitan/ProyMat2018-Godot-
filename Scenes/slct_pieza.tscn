@@ -3,7 +3,7 @@
 [ext_resource path="res://Sprites/seleccion.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/slct_pieza.gd" type="Script" id=2]
 
-[node name="slct_pieza" type="TextureButton" groups=[
+[node name="slct_pieza" type="TextureButton" index="0" groups=[
 "slct_p",
 ]]
 

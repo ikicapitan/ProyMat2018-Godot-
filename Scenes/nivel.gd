@@ -59,5 +59,18 @@ func cargar_tangrama():
 	add_child(newTangram)
 	
 func cargar_pieza():
-	var newTangram = get_tree().get_nodes_in_group("main")[0].arbol.instance()
+	var resultado = randi()%get_tree().get_nodes_in_group("main")[0].cant_figuras+1
+	var newTangram
+	match resultado:
+		1:
+			newTangram = get_tree().get_nodes_in_group("main")[0].gato.instance()
+		2:
+			newTangram = get_tree().get_nodes_in_group("main")[0].barco.instance()
+		3:
+			newTangram = get_tree().get_nodes_in_group("main")[0].casita.instance()
+		4:
+			newTangram = get_tree().get_nodes_in_group("main")[0].cisne.instance()
+		5: 
+			newTangram = get_tree().get_nodes_in_group("main")[0].arbol.instance()
+
 	get_tree().get_nodes_in_group("tangram")[0].add_child(newTangram)

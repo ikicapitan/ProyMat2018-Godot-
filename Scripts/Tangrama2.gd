@@ -14,8 +14,11 @@ var target = -1 #Pieza seleccionada actualmente
 var offset
 export (Vector2) var v_offset
 var piezas = [pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new()] #1 y 2 (TRI3), 3 (TRI2), 4 y 5 (TRI1), 6 QUAD, 7 RECT
+var p_resuelto = [pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new(), pieza.new()] #1 y 2 (TRI3), 3 (TRI2), 4 y 5 (TRI1), 6 QUAD, 7 RECT
 var modificador = 1
 var colores = [Color(1,1,0,1), Color(1,0,0,1), Color(0,1,0,1), Color(0, 0, 1, 1), Color(0, 1, 1, 1), Color(1, 0.65, 0, 1), Color(0.75, 0.75, 0.75)]
+var res_generado = false
+
 
 class pieza: #Clase pieza de Tangrama
 	var pos_ini = Vector2(0,0)
@@ -24,6 +27,7 @@ class pieza: #Clase pieza de Tangrama
 	var vertices = []
 	var flipped = false #Volteado
 	var boton_select
+	
 
 func dibujar_figura(pieza, color):#Dibuja la pieza segun sus vertices
 	draw_polygon(pieza.vertices, PoolColorArray([color]))
@@ -42,28 +46,33 @@ func _ready():
 		p.boton_select.modulate = Color(1, 0.41, 0.71, 1)
 		add_child(p.boton_select)
 	
-	
 func _draw():
 	dibujar_tangrama()
 	
 func dibujar_tangrama():
 	for i in piezas.size():#Recorre las piezas del tangrama por indice
 		dibujar_figura(piezas[i],colores[i])
+		var c_color = colores[i]
+		c_color.a = 0.2
+		dibujar_figura(p_resuelto[i],c_color)
 		for j in piezas[i].vertices.size():#Recorre los vertices de cada pieza para dibujar los contornos
 			draw_line(piezas[i].vertices[j-1],piezas[i].vertices[j], Color(0,0,0,0.5), CONTORNO, false)
 	update()
 	
 func actualizar():
-	generar_figuras()
+	if(!res_generado):
+		generar_figuras()
 	if(target != -1): #Si el target es distin de -1, es porque se seleccionó una pieza
 			for objeto in get_tree().get_nodes_in_group("slct"):#Elimino todos los vertices selecionables que existen
 				remove_child(objeto)
 				objeto.queue_free()
 			for v in piezas[target].vertices: #Creamos vertices seleccionables segun el target
 				var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
-				add_child(newPoint)
+				newPoint.ref_v = v #Le doy como referencia el vertice actual
 				newPoint.rect_position = v + v_offset
+				add_child(newPoint)
 	update()
+	
 	
 func generar_figuras():
 	tri3R()
@@ -73,6 +82,23 @@ func generar_figuras():
 	tri2()
 	quad1()
 	rect1()
+	if(!res_generado):
+		generar_resuelto()
+		
+func generar_resuelto():
+	for i in piezas.size():
+		p_resuelto[i].pos_ini = piezas[i].pos_ini
+		p_resuelto[i].vertices = piezas[i].vertices.duplicate()
+		
+	
+	res_generado = true
+	#generar_desorden()
+	
+	for i in piezas.size():
+		piezas[i].boton_select.rect_position = calcular_centro(piezas[i])
+	
+	update()
+	
 	
 func quad(var dim): #Crea cuadrado
 	if(piezas[5].disponible):
@@ -100,7 +126,7 @@ func rect(var dim): #Crea rectangulo
 	if(piezas[6].disponible):
 		var radianes = deg2rad(piezas[6].grados)
 		var pos_ini = Vector2(piezas[6].pos_ini.x * offset.x, piezas[6].pos_ini.y * offset.x)
-		piezas[6].vertices.clear()
+		piezas[6].vertices.clear() #jJony
 		piezas[6].vertices.append(Vector2(0,0).rotated(radianes) + pos_ini)
 		piezas[6].vertices.append(Vector2(dim * offset.x * modificador,0).rotated(radianes) + pos_ini)
 		piezas[6].vertices.append(Vector2(dim/2 * offset.x * modificador + dim * offset.x * modificador,dim/2 * -offset.x).rotated(radianes) + pos_ini)
@@ -148,4 +174,61 @@ func quad1(): #Dibuja el cuadrado
 
 func rect1(): #Dibuja el rectangulo
 	rect(LADO_PARAL)
+
+#Por Jjony	
+func actualizar_figura():
+	var vert_edit = get_tree().get_nodes_in_group("slct")#Obtengo todos los vertices editables que existen
+	for i in piezas[target].vertices.size(): #Recorremos los vertices de la figura seleccionada  
+		#Le asigno a cada vertice el valor del vertice seleccionable
+		piezas[target].vertices[i] = Vector2(
+		vert_edit[i].get_node("Ejes/X").text.to_int() * offset.x,
+        - vert_edit[i].get_node("Ejes/Y").text.to_int() * offset.x)
+        #Actualizo la posicion del vertice editable
+		vert_edit[i].rect_position = piezas[target].vertices[i] + v_offset
+        #Recalculo el centro
+		piezas[target].boton_select.rect_position = calcular_centro(piezas[target])
+		update()
+	check_win() #Me fijo si gano el jugador
+		
+func actualizar_seleccion():
+	for objeto in get_tree().get_nodes_in_group("slct"):#Elimino todos los vertices selecionables que existen
+		remove_child(objeto)
+		objeto.queue_free()
+	for v in piezas[target].vertices: #Creamos vertices seleccionables segun el target
+		var newPoint = get_tree().get_nodes_in_group("main")[0].select.instance()
+		newPoint.ref_v = v #Le doy como referencia el vertice actual
+		newPoint.rect_position = v + v_offset
+		add_child(newPoint)
+		update()
+
+func generar_desorden():
+	for i in piezas.size():
+		var resultado = randi()%6 #0,1 nada, 2 multiplica, 3 divide, 4 posicion, 5 modif 1 vert 
+		if(resultado != 5):
+			var resultado2 = Vector2((randi()%20-10) * offset.x, (randi()%20-10) * offset.x)
+			for j in piezas[i].vertices.size():
+				match(resultado):
+					2: #Mult
+						piezas[i].vertices[j] *= 1.5
+					3: #Div
+						piezas[i].vertices[j] /= 1.5
+					4: #Pos
+						piezas[i].vertices[j] += resultado2
+		else:
+			resultado = randi()%(piezas[i].vertices.size()-1)
+			piezas[i].vertices[resultado] = Vector2((randi()%20-10)*offset.x, (randi()%20-10)*offset.x)
+			
 	
+func check_win():
+	for i in piezas.size():
+		for j in p_resuelto.size():
+			for k in piezas[i].vertices.size():
+				for l in piezas[j].vertices.size():
+					if(int(round(piezas[i].vertices[k].x)) != int(round(p_resuelto[j].vertices[l].x)) || 
+					int(round(piezas[i].vertices[k].y) != int(round(p_resuelto[j].vertices[l].y)))):
+						print(int(round(piezas[i].vertices[k].x)))
+						print(int(round(p_resuelto[j].vertices[l].x)))
+						return #Sale de la funcion porque encontro uno que no es igual
+	
+	
+
