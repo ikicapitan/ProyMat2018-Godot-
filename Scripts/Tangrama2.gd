@@ -92,7 +92,7 @@ func generar_resuelto():
 		
 	
 	res_generado = true
-	#generar_desorden()
+	generar_desorden()
 	
 	for i in piezas.size():
 		piezas[i].boton_select.rect_position = calcular_centro(piezas[i])
@@ -188,7 +188,10 @@ func actualizar_figura():
         #Recalculo el centro
 		piezas[target].boton_select.rect_position = calcular_centro(piezas[target])
 		update()
-	check_win() #Me fijo si gano el jugador
+	if check_win():#Me fijo si gano el jugador
+		print("GANASTE!")
+	else:
+		print("VUELVE A INTENTARLO!")
 		
 func actualizar_seleccion():
 	for objeto in get_tree().get_nodes_in_group("slct"):#Elimino todos los vertices selecionables que existen
@@ -203,32 +206,56 @@ func actualizar_seleccion():
 
 func generar_desorden():
 	for i in piezas.size():
-		var resultado = randi()%6 #0,1 nada, 2 multiplica, 3 divide, 4 posicion, 5 modif 1 vert 
-		if(resultado != 5):
-			var resultado2 = Vector2((randi()%20-10) * offset.x, (randi()%20-10) * offset.x)
-			for j in piezas[i].vertices.size():
-				match(resultado):
-					2: #Mult
-						piezas[i].vertices[j] *= 1.5
-					3: #Div
-						piezas[i].vertices[j] /= 1.5
-					4: #Pos
-						piezas[i].vertices[j] += resultado2
-		else:
-			resultado = randi()%(piezas[i].vertices.size()-1)
-			piezas[i].vertices[resultado] = Vector2((randi()%20-10)*offset.x, (randi()%20-10)*offset.x)
-			
+		var resultado = randi()%10 #0 multiplica, 1 divide, 2 posicion, 3 modif 1 vert 
+		match(resultado):
+			0: #Mult
+				for j in piezas[i].vertices.size():
+					piezas[i].vertices[j] *= 1.5
+			1: #Div
+				for j in piezas[i].vertices.size():
+					piezas[i].vertices[j] /= 1.5
+			2: #Pos
+				var desplazamiento = Vector2((randi()%20-10) * offset.x, (randi()%20-10) * offset.x)
+				for j in piezas[i].vertices.size():
+					piezas[i].vertices[j] += desplazamiento
+			3: #Mod un vertice
+				piezas[i].vertices[randi()%(piezas[i].vertices.size()-1)] = Vector2((randi()%20-10)*offset.x, (randi()%20-10)*offset.x)
+			_:
+				continue
 	
 func check_win():
-	for i in piezas.size():
-		for j in p_resuelto.size():
-			for k in piezas[i].vertices.size():
-				for l in piezas[j].vertices.size():
-					if(int(round(piezas[i].vertices[k].x)) != int(round(p_resuelto[j].vertices[l].x)) || 
-					int(round(piezas[i].vertices[k].y) != int(round(p_resuelto[j].vertices[l].y)))):
-						print(int(round(piezas[i].vertices[k].x)))
-						print(int(round(p_resuelto[j].vertices[l].x)))
-						return #Sale de la funcion porque encontro uno que no es igual
+	var coinciden = true
+	
+	for i in p_resuelto.size():#Recorre las piezas de tangrama por indice
+		var k = 0
+		#Recorre mientras cada vertice coincida con alguno del resuelto y no haya recorrido todos los vertices de la pieza
+		while (coinciden && k < piezas[i].vertices.size()):
+			coinciden = false#Se vuelve falso hasta encontrar coincidencia
+			for l in piezas[i].vertices.size():#Recorre cada vertice de pieza i
+				#print( "X:" + str(int(round(piezas[i].vertices[l].x / offset.x))) + " " + str(int(round(p_resuelto[i].vertices[k].x / offset.x))))
+				#print( "Y:" + str(int(round(piezas[i].vertices[l].y / offset.x))) + " " + str(int(round(p_resuelto[i].vertices[k].y / offset.x))))
+				
+				#(OPCION 1)Coprueba que alguno de los vertices coicida con el vertice k del resuelto redondeando
+#				if (int(round(piezas[i].vertices[l].x / offset.x)) == int(round(p_resuelto[i].vertices[k].x / offset.x)) &&
+#				int(round(piezas[i].vertices[l].y / offset.x)) == int(round(p_resuelto[i].vertices[k].y) / offset.x)):
+#					coinciden = true
+					
+				#(OPCION 2)Coprueba que alguno de los vertices coicida con el vertice k del resuelto con margen de error de offset.x / 2 (13px)
+				if ( abs(piezas[i].vertices[l].x - p_resuelto[i].vertices[k].x) < offset.x / 2 &&
+					abs(piezas[i].vertices[l].y - p_resuelto[i].vertices[k].y) < offset.x / 2):
+					coinciden = true
+				
+				#OPCIONAL
+				if l != k: #Si los indices son distintos
+				#Compara que dos vertices de la misma pieza no esten en el mismo lugar
+					if (int(round(piezas[i].vertices[l].x / offset.x)) == int(round(piezas[i].vertices[k].x / offset.x)) && 
+					int(round(piezas[i].vertices[l].y / offset.x)) == int(round(piezas[i].vertices[k].y) / offset.x)):
+						coinciden = false #Encontro una diferencia porque dos vertices no pueden ser iguales
+				
+			k += 1 #Paso al siguiente vertice del resuelto
+			
+#	print(coinciden)
+	return coinciden #Retorna un booleano que indica si ganó
 	
 	
 
