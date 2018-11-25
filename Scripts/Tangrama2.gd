@@ -189,9 +189,10 @@ func actualizar_figura():
 		piezas[target].boton_select.rect_position = calcular_centro(piezas[target])
 		update()
 	if check_win():#Me fijo si gano el jugador
-		print("GANASTE!")
+		gamehandler.set_puntos(5)
+		get_tree().reload_current_scene()
 	else:
-		print("VUELVE A INTENTARLO!")
+		pass
 		
 func actualizar_seleccion():
 	for objeto in get_tree().get_nodes_in_group("slct"):#Elimino todos los vertices selecionables que existen
@@ -223,7 +224,7 @@ func generar_desorden():
 			_:
 				continue
 	
-func check_win():
+func check_win(): #jJony - Iki
 	var coinciden = true
 	
 	for i in p_resuelto.size():#Recorre las piezas de tangrama por indice

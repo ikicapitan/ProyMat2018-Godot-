@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/txt_num.tscn" type="PackedScene" id=2]
@@ -11,8 +11,25 @@
 [ext_resource path="res://Scenes/slct.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scenes/slct_pieza.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Scenes/nivel.gd" type="Script" id=11]
+[ext_resource path="res://Fonts/Mathematical Bold.ttf" type="DynamicFontData" id=12]
 
-[node name="main" type="Node" groups=[
+[sub_resource type="DynamicFont" id=1]
+
+size = 38
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 12 )
+_sections_unfolded = [ "Settings" ]
+
+[sub_resource type="DynamicFont" id=2]
+
+size = 48
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 12 )
+_sections_unfolded = [ "Font", "Settings" ]
+
+[node name="main" type="Node" index="0" groups=[
 "main",
 ]]
 
@@ -27,6 +44,7 @@ arbol = ExtResource( 8 )
 select = ExtResource( 9 )
 select_p = ExtResource( 10 )
 cant_figuras = 5
+tiempo_desafio = 60
 
 [node name="cam" type="Camera2D" parent="." index="0"]
 
@@ -63,5 +81,66 @@ unidad_y = 20
 grosor_lineas = 1
 largo_lineas = 5
 distancia_texto = 5
+
+[node name="clock" type="Timer" parent="." index="2"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = true
+
+[node name="reloj" type="Label" parent="." index="3" groups=[
+"reloj",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 418.0
+margin_top = -284.0
+margin_right = 460.0
+margin_bottom = -244.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 1 )
+text = "0:00"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "custom_fonts" ]
+
+[node name="puntos" type="Label" parent="." index="4" groups=[
+"puntos",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -492.0
+margin_top = -285.0
+margin_right = -452.0
+margin_bottom = -233.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 2 )
+text = "0"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "custom_fonts" ]
+
+[connection signal="timeout" from="clock" to="." method="_on_clock_timeout"]
 
 
